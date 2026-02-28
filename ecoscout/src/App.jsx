@@ -16,12 +16,18 @@ function App() {
   const brandData = activeView !== 'default' ? MOCK_CASES[activeView] : null;
 
   return (
+
+
     <div className="app-container">
       {/* HEADER */}
+
+
       <header className="header">
-        <Leaf size={24} color="#16a34a" />
-        <h1>EcoScout</h1>
+  {/* Update the color code here to #345E37 */}
+      <Leaf size={24} color="#345E37" /> 
+      <h1>EcoScout</h1>
       </header>
+  
 
       {/* --- THE DEFAULT VIEW --- */}
       {activeView === 'default' && (

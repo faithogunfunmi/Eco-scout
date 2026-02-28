@@ -1,35 +1,76 @@
 /* src/App.css */
-body {
-  width: 350px;
-  height: 500px; /* Lock to standard popup size */
-  margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #333;
-  background-color: #f8fafc;
+
+/* --- EARTHY COLOR PALETTE --- */
+:root {
+  --bg-cream: #F4F1E1; /* Warm background from your Earth Day poster */
+  --text-brown: #5A4032; /* Deep earthy brown for text */
+  --text-green: #345E37; /* Forest green for headers */
+  
+  --meter-yes: #7CB373; /* Organic Sage Green */
+  --meter-mixed: #E2B24E; /* Earthy Mustard/Sun Yellow */
+  --meter-no: #D46A54; /* Terracotta/Clay Red */
+  
+  --card-bg: #FFFFFF;
+  --border-light: #E0DBCD;
 }
 
+/* --- THE SIZING FIX (For testing in localhost) --- */
+/* This centers the 350x500 box on your screen so it looks like the popup */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #D6D2C4; /* Darker background outside the app */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+}
+
+/* --- THE ACTUAL EXTENSION WINDOW --- */
 .app-container {
+  width: 350px;
+  height: 500px; /* Locked to exact Chrome popup size */
+  background-color: var(--bg-cream);
+  color: var(--text-brown);
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  
+  /* Adds a shadow so you can see the box on localhost */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+  border-radius: 12px; 
 }
 
-/* Header */
+/* --- HEADER --- */
 .header {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   padding: 16px;
-  background-color: white;
-  border-bottom: 1px solid #e2e8f0;
+  background-color: var(--bg-cream);
+  border-bottom: 2px dashed var(--border-light); /* Organic dashed line */
 }
-.header h1 { margin: 0; font-size: 1.2rem; color: #166534; }
 
-/* Main Views */
+.header h1 { 
+  margin: 0; 
+  font-size: 1.4rem; 
+  font-weight: 800;
+  color: var(--text-green); 
+  letter-spacing: -0.5px;
+}
+
+/* --- MAIN VIEWS --- */
 .view-container {
   flex: 1;
-  padding: 16px;
+  padding: 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -38,67 +79,84 @@ body {
 
 .brand-title {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 800;
   text-align: center;
-  color: #0f172a;
+  color: var(--text-green);
 }
 
-.subtitle { margin: 0; font-size: 0.85rem; color: #64748b; line-height: 1.4; }
+.subtitle { 
+  margin: 0; 
+  font-size: 0.9rem; 
+  color: var(--text-brown); 
+  line-height: 1.5; 
+  text-align: center;
+}
 
-/* Ratings Box */
+/* --- RATINGS BOX --- */
 .ratings-box {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 }
+
 .rating-row {
   display: flex;
   justify-content: space-between;
-  padding: 4px 0;
+  padding: 6px 0;
   font-size: 0.9rem;
+  color: var(--text-brown);
 }
-.rating-row strong { color: #0f172a; }
+
+.rating-row strong { 
+  color: var(--text-green); 
+  font-weight: 700;
+}
 
 /* --- THE SEMI-CIRCLE METER --- */
 .meter-section {
   text-align: center;
-  margin: 10px 0;
+  margin: 15px 0;
 }
+
 .meter-container {
   width: 160px;
-  height: 80px; /* Half of width */
+  height: 80px; 
   position: relative;
   margin: 0 auto;
-  overflow: hidden; /* Cuts off the bottom half of the circle */
+  overflow: hidden; 
 }
+
 .meter-arc {
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  border: 15px solid #e2e8f0;
+  border: 16px solid #EBE7D9; /* Empty arc color */
   box-sizing: border-box;
   position: absolute;
   top: 0;
   left: 0;
 }
-/* Color the arc based on the case */
-.meter-arc.yes { border-color: #22c55e #e2e8f0 #e2e8f0 #e2e8f0; transform: rotate(-45deg); }
-.meter-arc.mixed { border-color: #f59e0b #f59e0b #e2e8f0 #e2e8f0; transform: rotate(-45deg); }
-.meter-arc.no { border-color: #ef4444 #ef4444 #ef4444 #e2e8f0; transform: rotate(-45deg); }
+
+/* Beautiful organic colors for the meter */
+.meter-arc.yes { border-color: var(--meter-yes) #EBE7D9 #EBE7D9 #EBE7D9; transform: rotate(-45deg); }
+.meter-arc.mixed { border-color: var(--meter-mixed) var(--meter-mixed) #EBE7D9 #EBE7D9; transform: rotate(-45deg); }
+.meter-arc.no { border-color: var(--meter-no) var(--meter-no) var(--meter-no) #EBE7D9; transform: rotate(-45deg); }
 
 .meter-needle {
   width: 4px;
   height: 65px;
-  background: #0f172a;
+  background: var(--text-brown); /* Dark brown needle */
   position: absolute;
   bottom: 0;
-  left: 78px; /* Center it */
+  left: 78px; 
   transform-origin: bottom center;
-  transition: transform 0.4s ease-out;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy cute animation */
   border-radius: 4px;
 }
-/* Rotate the needle based on the case */
+
 .meter-needle.point-yes { transform: rotate(-60deg); }
 .meter-needle.point-mixed { transform: rotate(0deg); }
 .meter-needle.point-no { transform: rotate(60deg); }
@@ -107,52 +165,84 @@ body {
   display: flex;
   justify-content: space-between;
   width: 180px;
-  margin: 5px auto 0;
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: bold;
+  margin: 8px auto 0;
+  font-size: 0.8rem;
+  color: var(--text-brown);
+  font-weight: 700;
 }
 
-/* Recommendations */
+/* --- RECOMMENDATIONS --- */
 .rec-box {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 8px;
-  padding: 12px;
-}
-.rec-box h3 { margin: 0 0 8px 0; font-size: 0.9rem; color: #166534; }
-.rec-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.rec-pill {
-  background: white;
-  border: 1px solid #86efac;
-  padding: 4px 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
   border-radius: 12px;
-  font-size: 0.75rem;
-  color: #15803d;
+  padding: 14px;
 }
 
-/* Default Rec List */
-.rec-list { display: flex; flex-direction: column; gap: 8px; }
+.rec-box h3 { 
+  margin: 0 0 10px 0; 
+  font-size: 0.9rem; 
+  color: var(--text-green); 
+}
+
+.rec-tags { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 8px; 
+}
+
+.rec-pill {
+  background: var(--bg-cream);
+  border: 1px solid #D1CBBB;
+  padding: 6px 10px;
+  border-radius: 16px; /* Soft round pills */
+  font-size: 0.75rem;
+  color: var(--text-brown);
+  font-weight: 600;
+}
+
+/* Default View Rec List */
+.rec-list { display: flex; flex-direction: column; gap: 10px; }
 .rec-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  padding: 10px;
-  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  padding: 14px;
+  border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
-.rec-card h3 { margin: 0; font-size: 0.9rem; }
-.tag { font-size: 0.7rem; color: #64748b; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+.rec-card h3 { margin: 0; font-size: 0.95rem; color: var(--text-green); }
+.tag { 
+  font-size: 0.7rem; 
+  color: var(--text-brown); 
+  background: var(--bg-cream); 
+  padding: 4px 8px; 
+  border-radius: 6px; 
+}
 
-/* Test Panel (Bottom) */
+/* --- TEST BUTTONS (Bottom) --- */
 .test-panel {
-  background: #e2e8f0;
+  background: #EBE7D9;
   padding: 12px;
   text-align: center;
-  border-top: 1px solid #cbd5e1;
+  border-top: 1px dashed var(--border-light);
+  margin-top: auto; /* Pushes to the very bottom */
 }
-.test-panel p { margin: 0 0 8px 0; font-size: 0.75rem; font-weight: bold; color: #475569; }
-.test-buttons { display: flex; justify-content: center; gap: 6px; }
-.test-buttons button { padding: 4px 8px; border: none; border-radius: 4px; background: white; cursor: pointer; font-size: 0.8rem; }
-.test-buttons button.active { background: #3b82f6; color: white; font-weight: bold; }
+.test-panel p { margin: 0 0 8px 0; font-size: 0.75rem; font-weight: bold; color: var(--text-brown); }
+.test-buttons { display: flex; justify-content: center; gap: 8px; }
+.test-buttons button { 
+  padding: 6px 10px; 
+  border: none; 
+  border-radius: 6px; 
+  background: var(--card-bg); 
+  cursor: pointer; 
+  font-size: 0.8rem;
+  color: var(--text-brown);
+}
+.test-buttons button.active { 
+  background: var(--text-green); 
+  color: white; 
+  font-weight: bold; 
+}
