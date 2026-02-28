@@ -2,16 +2,19 @@
 
 /* --- EARTHY COLOR PALETTE --- */
 :root {
-  --bg-cream: #F4F1E1; /* Warm background from your Earth Day poster */
-  --text-brown: #5A4032; /* Deep earthy brown for text */
-  --text-green: #345E37; /* Forest green for headers */
+  --bg-cream: #E9E4D4; 
+  --text-brown: #8B5A2B; 
+  --text-green: #4A5D23; 
   
-  --meter-yes: #7CB373; /* Organic Sage Green */
-  --meter-mixed: #E2B24E; /* Earthy Mustard/Sun Yellow */
-  --meter-no: #D46A54; /* Terracotta/Clay Red */
+  --meter-yes: #7CB373; 
+  --meter-mixed: #D29C44; 
+  --meter-no: #B85B44; 
+  --meter-empty: #FAF8F0; 
   
-  --card-bg: #FFFFFF;
-  --border-light: #E0DBCD;
+  /* CHANGE THIS LINE FROM #F4F1E6 TO PURE WHITE */
+  --card-bg: #FFFFFF; 
+  
+  --border-light: #D5CFAF; 
 }
 
 /* --- THE SIZING FIX (For testing in localhost) --- */
@@ -43,6 +46,8 @@ html, body {
   position: relative;
   overflow: hidden;
   
+  background-image: radial-gradient(circle at top right, #F0ECD9 0%, transparent 40%),
+                    radial-gradient(circle at bottom left, #E2DCBF 0%, transparent 50%);
   /* Adds a shadow so you can see the box on localhost */
   box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
   border-radius: 12px; 
@@ -65,6 +70,11 @@ html, body {
   font-weight: 800;
   color: var(--text-green); 
   letter-spacing: -0.5px;
+}
+
+.header h1, .brand-title { 
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
 }
 
 /* --- MAIN VIEWS --- */
@@ -133,17 +143,18 @@ html, body {
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  border: 16px solid #EBE7D9; /* Empty arc color */
+  border: 16px solid var(--meter-empty); /* Uses the new light color */
   box-sizing: border-box;
   position: absolute;
   top: 0;
   left: 0;
 }
 
-/* Beautiful organic colors for the meter */
-.meter-arc.yes { border-color: var(--meter-yes) #EBE7D9 #EBE7D9 #EBE7D9; transform: rotate(-45deg); }
-.meter-arc.mixed { border-color: var(--meter-mixed) var(--meter-mixed) #EBE7D9 #EBE7D9; transform: rotate(-45deg); }
-.meter-arc.no { border-color: var(--meter-no) var(--meter-no) var(--meter-no) #EBE7D9; transform: rotate(-45deg); }
+/* Updated to use the new empty variable for the un-filled sides */
+.meter-arc.yes { border-color: var(--meter-yes) var(--meter-empty) var(--meter-empty) var(--meter-empty); transform: rotate(-45deg); }
+.meter-arc.mixed { border-color: var(--meter-mixed) var(--meter-mixed) var(--meter-empty) var(--meter-empty); transform: rotate(-45deg); }
+.meter-arc.no { border-color: var(--meter-no) var(--meter-no) var(--meter-no) var(--meter-empty); transform: rotate(-45deg); }
+
 
 .meter-needle {
   width: 4px;
