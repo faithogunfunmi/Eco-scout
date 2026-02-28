@@ -1,42 +1,158 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* src/App.css */
+body {
+  width: 350px;
+  height: 500px; /* Lock to standard popup size */
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #333;
+  background-color: #f8fafc;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  background-color: white;
+  border-bottom: 1px solid #e2e8f0;
+}
+.header h1 { margin: 0; font-size: 1.2rem; color: #166534; }
+
+/* Main Views */
+.view-container {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.brand-title {
+  margin: 0;
+  font-size: 1.5rem;
   text-align: center;
+  color: #0f172a;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.subtitle { margin: 0; font-size: 0.85rem; color: #64748b; line-height: 1.4; }
+
+/* Ratings Box */
+.ratings-box {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.rating-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.9rem;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.rating-row strong { color: #0f172a; }
+
+/* --- THE SEMI-CIRCLE METER --- */
+.meter-section {
+  text-align: center;
+  margin: 10px 0;
+}
+.meter-container {
+  width: 160px;
+  height: 80px; /* Half of width */
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden; /* Cuts off the bottom half of the circle */
+}
+.meter-arc {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 15px solid #e2e8f0;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* Color the arc based on the case */
+.meter-arc.yes { border-color: #22c55e #e2e8f0 #e2e8f0 #e2e8f0; transform: rotate(-45deg); }
+.meter-arc.mixed { border-color: #f59e0b #f59e0b #e2e8f0 #e2e8f0; transform: rotate(-45deg); }
+.meter-arc.no { border-color: #ef4444 #ef4444 #ef4444 #e2e8f0; transform: rotate(-45deg); }
+
+.meter-needle {
+  width: 4px;
+  height: 65px;
+  background: #0f172a;
+  position: absolute;
+  bottom: 0;
+  left: 78px; /* Center it */
+  transform-origin: bottom center;
+  transition: transform 0.4s ease-out;
+  border-radius: 4px;
+}
+/* Rotate the needle based on the case */
+.meter-needle.point-yes { transform: rotate(-60deg); }
+.meter-needle.point-mixed { transform: rotate(0deg); }
+.meter-needle.point-no { transform: rotate(60deg); }
+
+.meter-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 180px;
+  margin: 5px auto 0;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: bold;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Recommendations */
+.rec-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 12px;
+}
+.rec-box h3 { margin: 0 0 8px 0; font-size: 0.9rem; color: #166534; }
+.rec-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.rec-pill {
+  background: white;
+  border: 1px solid #86efac;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: #15803d;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Default Rec List */
+.rec-list { display: flex; flex-direction: column; gap: 8px; }
+.rec-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+.rec-card h3 { margin: 0; font-size: 0.9rem; }
+.tag { font-size: 0.7rem; color: #64748b; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
 
-.card {
-  padding: 2em;
+/* Test Panel (Bottom) */
+.test-panel {
+  background: #e2e8f0;
+  padding: 12px;
+  text-align: center;
+  border-top: 1px solid #cbd5e1;
 }
-
-.read-the-docs {
-  color: #888;
-}
+.test-panel p { margin: 0 0 8px 0; font-size: 0.75rem; font-weight: bold; color: #475569; }
+.test-buttons { display: flex; justify-content: center; gap: 6px; }
+.test-buttons button { padding: 4px 8px; border: none; border-radius: 4px; background: white; cursor: pointer; font-size: 0.8rem; }
+.test-buttons button.active { background: #3b82f6; color: white; font-weight: bold; }
