@@ -5,10 +5,19 @@
   "description": " ",
   "action": {
     "default_popup": "index.html",
-    "default_title": "EcoScout"
+    "default_title": "EcoScout",
+    "default_icon": {
+      "16": "leaf4.png",
+      "48": "leaf4.png"
+    }
   },
   "permissions": [
     "activeTab",
     "tabs"
-  ]
+  ],
+  "icons": {
+    "16": "leaf4.png",
+    "48": "leaf4.png",
+    "128": "leaf4.png"
+  }
 }
