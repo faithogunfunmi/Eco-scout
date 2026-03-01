@@ -4,7 +4,7 @@ import funcs
 
 app = Flask(__name__, static_folder="../../frontend/crud_app/dist", static_url_path="/")
 CORS(app,
-     resources={r"/*": {"origins": "http://localhost:5173"}},
+     resources={r"/*": {"origins": "chrome-extension://dcmfcppjhgfgachphnifcijnnjihgjkb"}},
      allow_headers=["Content-Type", "Authorization"],
      methods=["GET", "POST", "OPTIONS"],
      supports_credentials=True)
@@ -31,7 +31,7 @@ def get_data():
         "sustainability": funcs.get_sustain_rating(docId),
         "ethics": funcs.get_ethic_rating(docId),
         "overall": funcs.get_total_rating(docId),
-        "reccomendations": []
+        "recommendations": ["hello"] # THIS CAN NEVER BE EMPTY OR THERE WILL BE AN ERROR
         }), 200
 
 if __name__ == "__main__":

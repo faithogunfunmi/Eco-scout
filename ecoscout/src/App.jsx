@@ -39,16 +39,20 @@ function App() {
         // Let's print the response so you can prove it worked!
         const data = await response.json();
         console.log("Response from backend:", data);
-        
+
         if (data && data.overall !== undefined) {
+          let viewToTarget = 'default'
           console.log("checkpoint3");
           if (data.overall === 0) {
             setActiveView('yes');
+            viewToTarget = 'yes';
             console.log("checkpoint4a");
           } else if (data.overall === 1) {
+            viewToTarget = 'no';
             setActiveView('no');
             console.log("checkpoint4b");
           } else if (data.overall === 2) {
+            viewToTarget = 'mixed';
             setActiveView('mixed');
             console.log("checkpoint4c");
           }
