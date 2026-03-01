@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "EcoScout",
+  "version": "1.0",
+  "description": " ",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "EcoScout"
+  }
+}
