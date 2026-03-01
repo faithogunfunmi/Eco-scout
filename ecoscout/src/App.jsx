@@ -3,49 +3,132 @@ import { Leaf, Search } from 'lucide-react';
 import { MOCK_CASES, DEFAULT_RECOMMENDATIONS} from './brandData';
 import './App.css';
 
+// This function translates the numeric values we set for our ratings into human-readable text for the UI.
 const translateRating = (number) => {
-  if (number === 0) return "Yes";
-  if (number === 1) return "No";
+  if (number === 0) return "Good";
+  if (number === 1) return "Bad";
   if (number === 2) return "Mixed";
   return "Unknown";
 };
 
-function App() {
-  const [activeView, setActiveView] = useState('default');
-  // Grab the data for the selected brand (will be null if 'default' is active)
-  const brandData = activeView !== 'default' ? MOCK_CASES[activeView] : null;
 
+function App() {
+  const [activeView, setActiveView] = useState('default'); 
+  const [brandData, setBrandData] = useState(null);
+
+  // This function is responsible for communicating with the Flask backend. 
+  /* It sends back a given URL, then based on what's returned it:
+        - Sets the active view (What screen the user will see)
+        - Sets the brand data (The information about the brand that will be shown on the screen)
+  */
   const testBackendConnection = async () => {
-      // Step 1a: The hard-coded URL
-      const fakeUrl = "https://www.shein.com"; 
+      
+      console.log("checkpoint1");
+      
+      const sendUrlToFlask = async (liveUrl) => {
+
+      console.log("checkpoint2");
 
       try {
-        // Step 1b: Send the URL to Flask
+        // Sends the URL to Flask
+        console.log(`Sending this URL to Flask: ${liveUrl}`);
         const response = await fetch("http://127.0.0.1:8080", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ url: fakeUrl }) // Packaging it up!
+          body: JSON.stringify({ url: liveUrl })
         }); 
         
-        // Let's print the response so you can prove it worked!
         const data = await response.json();
         console.log("Response from backend:", data);
 
+        if (data && data.overall !== undefined) {
+          let viewToTarget = 'default'
+          console.log("checkpoint3");
+
+          // Potential Advancement: We were working on adding notifications to alert users when they visit a site with a brand in our database.
+          //createNotification(`This brand has an overall rating of ${translateRating(data.overall)}. Click our extension to learn more!`);
+
+          // Sets the active view based on the overall rating
+          if (data.overall === 0) {
+            setActiveView('yes');
+            viewToTarget = 'yes';
+            console.log("checkpoint4a");
+          } else if (data.overall === 1) {
+            viewToTarget = 'no';
+            setActiveView('no');
+            console.log("checkpoint4b");
+          } else if (data.overall === 2) {
+            viewToTarget = 'mixed';
+            setActiveView('mixed');
+            console.log("checkpoint4c");
+          }
+          else{
+            setActiveView('default');
+            console.log("checkpoint4d");
+          }
+        
+        // Sets the brand data that will be shown on the screen
+        setBrandData({
+          ...data,
+          overall: viewToTarget 
+        });
+        
+
+        } else {
+          setActiveView('default');
+          setBrandData(null);
+        }
+
       } catch (error) {
         console.error("Fetch failed. Is Flask running?", error);
+        setBrandData(null);
+        setActiveView('default');
       }
     };
 
+    // Checks if we're in a Chrome extension
+   if (typeof chrome !== 'undefined' && chrome.tabs) {
+      // If we are, we grab the active URL
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const liveUrl = tabs[0].url;
+        console.log("Live URL from Chrome:", liveUrl);
+        sendUrlToFlask(liveUrl); 
+      });
+    } else {
+      // If we are just testing on localhost, we use the fake URL so we don't crash.
+      console.log("Not in Chrome extension mode. Using test URL.");
+      sendUrlToFlask("https://www.shein.com");
+    }
+
+    
+    
+  };
+
+  // Future advancement: Adding notifications
+  // Not used in our current version, but saved for future development
+  const createNotification = (message) => {
+    console.log("CreateNotification called");
+    if (typeof chrome !== 'undefined' && chrome.notifications) {
+          console.log("Creating notification with message:", message);
+          chrome.notifications.create({
+            title : "EcoScout Alert",
+            message : message,
+            iconUrl : "leaf4.png",
+            type : 'basic'
+          })
+    }
+  };
+
+  // Runs the testBackendConnection when the extension is opened
   useEffect(() => {
     // This function talks to the backend
+    console.log("start");
     testBackendConnection();
   }, []); 
 
   return (
-
-
     <div className="app-container">
       {/* HEADER */}
 
@@ -98,46 +181,47 @@ function App() {
               <div className={`meter-needle point-${brandData.overall}`}></div>
             </div>
             <div className="meter-labels">
-              <span>Yes</span>
+              <span>Good</span>
               <span>Mixed</span>
-              <span>No</span>
+              <span>Bad</span>
             </div>
           </div>
 
-          {/* Recommendations Box (Only show if there are recommendations) */}
-          {brandData.recommendations.length > 0 && (
-            <div className="rec-box">
-              <h3>Recommendations</h3>
-              <div className="rec-tags">
-                {brandData.recommendations.map((rec, idx) => (
-                  <span key={idx} className="rec-pill">{rec}</span>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Recommendations Box */}
+          *{brandData.recommendations?.length > 0 && (
+        <div className="rec-box">
+          <h3>Recommendations</h3>
+          <div className="rec-tags">
+            
+            {brandData.recommendations.map((recName, idx) => {
+              const rawUrl = brandData.recommendURL ? brandData.recommendURL[idx] : "#";
+
+              console.log(`Processing recommendation: ${recName} with URL: ${rawUrl}`);
+
+              // If the URL doesn't start with http, add it!
+              const matchingUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+              return (
+                <a 
+                  key={idx} 
+                  href={matchingUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="rec-pill"
+                >
+                  {recName}
+                </a>
+              );
+            })}
+
+          </div>
         </div>
       )}
 
-      {/* --- HACKATHON TEST BUTTONS (We will delete these later) --- */}
-      <div className="test-panel">
-        <p>Test Views:</p>
-        <button 
-          onClick={testBackendConnection} 
-          style={{ background: '#4A5D23', color: 'white', padding: '8px', width: '100%', marginBottom: '10px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-        >
-          STEP 1: Send URL to Backend
-        </button>
-        <div className="test-buttons">
-          <button onClick={() => setActiveView('default')} className={activeView === 'default' ? 'active' : ''}>Default</button>
-          <button onClick={() => setActiveView('yes')} className={activeView === 'yes' ? 'active' : ''}>Yes</button>
-          <button onClick={() => setActiveView('mixed')} className={activeView === 'mixed' ? 'active' : ''}>Mixed</button>
-          <button onClick={() => setActiveView('no')} className={activeView === 'no' ? 'active' : ''}>No</button>
-        </div>
-      </div>
+      </div> 
+    )}
+
     </div>
   );
-
-  
 }
 
 export default App;
