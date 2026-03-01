@@ -163,24 +163,40 @@ function App() {
           </div>
 
           {/* Recommendations Box (Only show if there are recommendations) */}
-          {brandData.recommendations.length > 0 && (
-            <div className="rec-box">
-              <h3>Recommendations</h3>
-              <div className="rec-tags">
-                {brandData.recommendations.map((rec, idx) => (
-                  <span key={idx} className="rec-pill">{rec}</span>
-                ))}
-              </div>
-            </div>
-          )}
+          *{brandData.recommendations?.length > 0 && (
+        <div className="rec-box">
+          <h3>Recommendations</h3>
+          <div className="rec-tags">
+            
+            {brandData.recommendations.map((recName, idx) => {
+              const rawUrl = brandData.recommendURL ? brandData.recommendURL[idx] : "#";
+
+              console.log(`Processing recommendation: ${recName} with URL: ${rawUrl}`);
+
+              // If the URL doesn't start with http, add it!
+              const matchingUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+              return (
+                <a 
+                  key={idx} 
+                  href={matchingUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="rec-pill"
+                >
+                  {recName}
+                </a>
+              );
+            })}
+
+          </div>
         </div>
       )}
 
-      
+      </div> 
+    )}
+
     </div>
   );
-
-  
 }
 
 export default App;

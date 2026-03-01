@@ -77,14 +77,15 @@ def get_rec_names(document_id):
     doc = db.collection("FastFashionData").document(document_id).get()
     if doc.exists:
         data = doc.to_dict()
-        rec_refs = data.get("Recs", [])
+        rec_refs = data.get("Recc", [])
 
         for recID in rec_refs:
-            recDoc= db.collection("Recs").document(recID).get()
-            rec=recDoc.get()
+            #recDoc= db.collection("Recs").document(recID).get()
+            rec=recID.get()
             if rec.exists:
                 rec_data = rec.to_dict()
                 company_name = rec_data.get("Company")
+                print(company_name)
                 if company_name:
                     my_strings.append(company_name)
             else:
@@ -92,8 +93,10 @@ def get_rec_names(document_id):
     else:
         print(f"Document {document_id} not found!")
 
+    return my_strings
 
-def get_rec_names(document_id):
+
+def get_rec_urls(document_id):
     my_strings = []
     doc = db.collection("FastFashionData").document(document_id).get()
     if doc.exists:
@@ -112,7 +115,5 @@ def get_rec_names(document_id):
                 print(f"Document {recID} not found!")
     else:
         print(f"Document {document_id} not found!")
-
-
 
     return my_strings

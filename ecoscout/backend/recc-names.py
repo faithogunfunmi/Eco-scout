@@ -1,7 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-cred = credentials.Certificate(r"C:\Users\faith\Documents\GitHub\Eco-scout\ecoscout\backend\credentials.json")
+cred = credentials.Certificate(r"C:\Users\espyc\Documents\GitHub\Eco-scout\ecoscout\backend\credentials.json")
 firebase_admin.initialize_app(cred)
 
 #app = firebase_admin.initialize_app()
@@ -34,8 +34,6 @@ def get_rec_names(docs):
                 print(f"Document {recID} not found!")
     else:
         print(f"Document{doc_id} not found!")
-
-
 
     return my_strings
 
