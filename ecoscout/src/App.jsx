@@ -18,37 +18,41 @@ function App() {
       // Step 1a: The hard-coded URL
       console.log("checkpoint1");
 
-      const fakeUrl = "https://www.shein.com"; 
+      //const fakeUrl = "https://www.shein.com"; 
       //sendUrlToFlask(fakeUrl);
 
-      //const sendUrlToFlask = async (fakeUrl) => {
+      const sendUrlToFlask = async (liveUrl) => {
 
       console.log("checkpoint2");
 
       try {
         // Step 1b: Send the URL to Flask
-        console.log(`Sending this URL to Flask: ${fakeUrl}`);
+        console.log(`Sending this URL to Flask: ${liveUrl}`);
         const response = await fetch("http://127.0.0.1:8080", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ url: fakeUrl })
+          body: JSON.stringify({ url: liveUrl })
         }); 
         
         // Let's print the response so you can prove it worked!
         const data = await response.json();
         console.log("Response from backend:", data);
-        
+
         if (data && data.overall !== undefined) {
+          let viewToTarget = 'default'
           console.log("checkpoint3");
           if (data.overall === 0) {
             setActiveView('yes');
+            viewToTarget = 'yes';
             console.log("checkpoint4a");
           } else if (data.overall === 1) {
+            viewToTarget = 'no';
             setActiveView('no');
             console.log("checkpoint4b");
           } else if (data.overall === 2) {
+            viewToTarget = 'mixed';
             setActiveView('mixed');
             console.log("checkpoint4c");
           }
@@ -73,13 +77,14 @@ function App() {
         setBrandData(null);
         setActiveView('default');
       }
-    //};
+    };
 
     // 2. THE MAGIC: Check if we are a real Chrome extension!
-   /* if (typeof chrome !== 'undefined' && chrome.tabs) {
+   if (typeof chrome !== 'undefined' && chrome.tabs) {
       // We are in Chrome! Grab the active tab URL.
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const liveUrl = tabs[0].url;
+        console.log("Live URL from Chrome:", liveUrl);
         sendUrlToFlask(liveUrl); 
       });
     } else {
@@ -87,7 +92,7 @@ function App() {
       console.log("Not in Chrome extension mode. Using test URL.");
       sendUrlToFlask("https://www.shein.com");
     }
-    */
+    
   };
 
   useEffect(() => {
@@ -179,41 +184,3 @@ function App() {
 }
 
 export default App;
-
-
-
-/*{brandData.recommendations?.length > 0 && (
-        <div className="rec-box">
-          <h3>Recommendations</h3>
-          <div className="rec-tags">
-            
-            {brandData.recommendations.map((recName, idx) => {
-              const rawUrl = brandData.recommendURL ? brandData.recommendURL[idx] : "#";
-              // If the URL doesn't start with http, add it!
-              const matchingUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
-              return (
-                <a 
-                  key={idx} 
-                  href={matchingUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="rec-pill"
-                >
-                  {recName}
-                </a>
-              );
-            })}
-
-          </div>
-        </div>
-      )}
-
-      </div> 
-    )}
-
-    </div>
-  );
-}
-  */
-
-
