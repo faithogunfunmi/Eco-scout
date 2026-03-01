@@ -1,42 +1,259 @@
+/* src/App.css */
+
+/* --- EARTHY COLOR PALETTE --- */
+:root {
+  --bg-cream: #E9E4D4; 
+  --text-brown: #8B5A2B; 
+  --text-green: #4A5D23; 
+  
+  --meter-yes: #7CB373; 
+  --meter-mixed: #D29C44; 
+  --meter-no: #B85B44; 
+  --meter-empty: #FAF8F0; 
+  
+  /* CHANGE THIS LINE FROM #F4F1E6 TO PURE WHITE */
+  --card-bg: #FFFFFF; 
+  
+  --border-light: #D5CFAF; 
+}
+
+/* --- THE SIZING FIX (For testing in localhost) --- */
+/* This centers the 350x500 box on your screen so it looks like the popup */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #D6D2C4; /* Darker background outside the app */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* --- THE ACTUAL EXTENSION WINDOW --- */
+.app-container {
+  width: 350px;
+  height: 500px; /* Locked to exact Chrome popup size */
+  background-color: var(--bg-cream);
+  color: var(--text-brown);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  
+  background-image: radial-gradient(circle at top right, #F0ECD9 0%, transparent 40%),
+                    radial-gradient(circle at bottom left, #E2DCBF 0%, transparent 50%);
+  /* Adds a shadow so you can see the box on localhost */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+  border-radius: 12px; 
+}
+
+/* --- HEADER --- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  background-color: var(--bg-cream);
+  border-bottom: 2px dashed var(--border-light); /* Organic dashed line */
+}
+
+.header h1 { 
+  margin: 0; 
+  font-size: 1.4rem; 
+  font-weight: 800;
+  color: var(--text-green); 
+  letter-spacing: -0.5px;
+}
+
+.header h1, .brand-title { 
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+}
+
+/* --- MAIN VIEWS --- */
+.view-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.brand-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--text-green);
+}
+
+.subtitle { 
+  margin: 0; 
+  font-size: 0.9rem; 
+  color: var(--text-brown); 
+  line-height: 1.5; 
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* --- RATINGS BOX --- */
+.ratings-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.rating-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  color: var(--text-brown);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.rating-row strong { 
+  color: var(--text-green); 
+  font-weight: 700;
 }
 
-.card {
-  padding: 2em;
+/* --- THE SEMI-CIRCLE METER --- */
+.meter-section {
+  text-align: center;
+  margin: 15px 0;
 }
 
-.read-the-docs {
-  color: #888;
+.meter-container {
+  width: 160px;
+  height: 80px; 
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden; 
+}
+
+.meter-arc {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 16px solid var(--meter-empty); /* Uses the new light color */
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Updated to use the new empty variable for the un-filled sides */
+.meter-arc.yes { border-color: var(--meter-yes) var(--meter-empty) var(--meter-empty) var(--meter-empty); transform: rotate(-45deg); }
+.meter-arc.mixed { border-color: var(--meter-mixed) var(--meter-mixed) var(--meter-empty) var(--meter-empty); transform: rotate(-45deg); }
+.meter-arc.no { border-color: var(--meter-no) var(--meter-no) var(--meter-no) var(--meter-empty); transform: rotate(-45deg); }
+
+
+.meter-needle {
+  width: 4px;
+  height: 65px;
+  background: var(--text-brown); /* Dark brown needle */
+  position: absolute;
+  bottom: 0;
+  left: 78px; 
+  transform-origin: bottom center;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy cute animation */
+  border-radius: 4px;
+}
+
+.meter-needle.point-yes { transform: rotate(-60deg); }
+.meter-needle.point-mixed { transform: rotate(0deg); }
+.meter-needle.point-no { transform: rotate(60deg); }
+
+.meter-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 180px;
+  margin: 8px auto 0;
+  font-size: 0.8rem;
+  color: var(--text-brown);
+  font-weight: 700;
+}
+
+/* --- RECOMMENDATIONS --- */
+.rec-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.rec-box h3 { 
+  margin: 0 0 10px 0; 
+  font-size: 0.9rem; 
+  color: var(--text-green); 
+}
+
+.rec-tags { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 8px; 
+}
+
+.rec-pill {
+  background: var(--bg-cream);
+  border: 1px solid #D1CBBB;
+  padding: 6px 10px;
+  border-radius: 16px; /* Soft round pills */
+  font-size: 0.75rem;
+  color: var(--text-brown);
+  font-weight: 600;
+}
+
+/* Default View Rec List */
+.rec-list { display: flex; flex-direction: column; gap: 10px; }
+.rec-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  padding: 14px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.rec-card h3 { margin: 0; font-size: 0.95rem; color: var(--text-green); }
+.tag { 
+  font-size: 0.7rem; 
+  color: var(--text-brown); 
+  background: var(--bg-cream); 
+  padding: 4px 8px; 
+  border-radius: 6px; 
+}
+
+/* --- TEST BUTTONS (Bottom) --- */
+.test-panel {
+  background: #EBE7D9;
+  padding: 12px;
+  text-align: center;
+  border-top: 1px dashed var(--border-light);
+  margin-top: auto; /* Pushes to the very bottom */
+}
+.test-panel p { margin: 0 0 8px 0; font-size: 0.75rem; font-weight: bold; color: var(--text-brown); }
+.test-buttons { display: flex; justify-content: center; gap: 8px; }
+.test-buttons button { 
+  padding: 6px 10px; 
+  border: none; 
+  border-radius: 6px; 
+  background: var(--card-bg); 
+  cursor: pointer; 
+  font-size: 0.8rem;
+  color: var(--text-brown);
+}
+.test-buttons button.active { 
+  background: var(--text-green); 
+  color: white; 
+  font-weight: bold; 
 }
