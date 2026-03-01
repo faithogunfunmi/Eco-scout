@@ -43,29 +43,29 @@ function App() {
         if (data && data.overall !== undefined) {
           console.log("checkpoint3");
           if (data.overall === 0) {
-            setActiveView('Yes');
+            setActiveView('yes');
             console.log("checkpoint4a");
           } else if (data.overall === 1) {
-            setActiveView('No');
+            setActiveView('no');
             console.log("checkpoint4b");
           } else if (data.overall === 2) {
-            setActiveView('Mixed');
+            setActiveView('mixed');
             console.log("checkpoint4c");
           }
           else{
             setActiveView('default');
             console.log("checkpoint4d");
           }
-        /*
+        
         setBrandData({
           ...data,
           overall: viewToTarget 
         });
-        */
+        
 
         } else {
           setActiveView('default');
-          //setBrandData(null);
+          setBrandData(null);
         }
 
       } catch (error) {
