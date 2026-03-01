@@ -1,3 +1,5 @@
+# companymatch.py is the test function we used before transferring the code over to funcs.py
+
 import firebase_admin
 from firebase_admin import credentials, firestore
 

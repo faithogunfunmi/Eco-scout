@@ -1,5 +1,7 @@
 // src/brandData.js
 
+// This is our testing data we used with the frontend before we connected it to FireStore
+
 // 0 = Yes, 1 = No, 2 = Mixed
 export const MOCK_CASES = {
   yes: {
