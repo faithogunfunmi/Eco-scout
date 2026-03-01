@@ -162,22 +162,7 @@ function App() {
         </div>
       )}
 
-      {/* --- HACKATHON TEST BUTTONS (We will delete these later) --- */}
-      <div className="test-panel">
-        <p>Test Views:</p>
-        <button 
-          onClick={testBackendConnection} 
-          style={{ background: '#4A5D23', color: 'white', padding: '8px', width: '100%', marginBottom: '10px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-        >
-          STEP 1: Send URL to Backend
-        </button>
-        <div className="test-buttons">
-          <button onClick={() => setActiveView('default')} className={activeView === 'default' ? 'active' : ''}>Default</button>
-          <button onClick={() => setActiveView('yes')} className={activeView === 'yes' ? 'active' : ''}>Yes</button>
-          <button onClick={() => setActiveView('mixed')} className={activeView === 'mixed' ? 'active' : ''}>Mixed</button>
-          <button onClick={() => setActiveView('no')} className={activeView === 'no' ? 'active' : ''}>No</button>
-        </div>
-      </div>
+      
     </div>
   );
 
