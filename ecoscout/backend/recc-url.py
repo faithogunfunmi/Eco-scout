@@ -12,3 +12,13 @@ from urllib.parse import urlparse, parse_qs
 #Get the documents
 docs = db.collection("FastFashionData").stream()
 
+doc_id = "0pvbEsazeeKdOAya259c"
+
+def get_url_from_doc_id(document_id):
+    doc = db.collection("FastFashionData").document(document_id).get()
+    url = doc.to_dict().get("RECC").get("RECC")
+    print(url)
+    return url
+
+
+
