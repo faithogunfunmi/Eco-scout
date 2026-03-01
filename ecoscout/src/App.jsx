@@ -11,32 +11,76 @@ const translateRating = (number) => {
 };
 
 function App() {
-  const [activeView, setActiveView] = useState('default');
-  // Grab the data for the selected brand (will be null if 'default' is active)
-  const brandData = activeView !== 'default' ? MOCK_CASES[activeView] : null;
+  const [activeView, setActiveView] = useState('default'); 
+  const [brandData, setBrandData] = useState(null);
 
   const testBackendConnection = async () => {
       // Step 1a: The hard-coded URL
-      const fakeUrl = "https://www.shein.com"; 
+      //const fakeUrl = "https://www.shein.com"; 
+
+      const sendUrlToFlask = async (urlToSend) => {
 
       try {
         // Step 1b: Send the URL to Flask
+        console.log(`Sending this URL to Flask: ${urlToSend}`);
         const response = await fetch("http://127.0.0.1:8080", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ url: fakeUrl }) // Packaging it up!
+          body: JSON.stringify({ url: urlToSend })
         }); 
         
         // Let's print the response so you can prove it worked!
         const data = await response.json();
         console.log("Response from backend:", data);
 
+        if (data && data.overall !== undefined) {
+
+          let viewToTarget = 'default';
+
+          if (data.overall === 0) {
+          viewToTarget = 'yes';
+        } else if (data.overall === 1) {
+          viewToTarget = 'no';
+        } else if (data.overall === 2) {
+          viewToTarget = 'mixed';
+        }
+
+        setActiveView(viewToTarget);
+        /*
+        setBrandData({
+          ...data,
+          overall: viewToTarget 
+        });
+        */
+
+        } else {
+          setActiveView('default');
+          //setBrandData(null);
+        }
+
       } catch (error) {
         console.error("Fetch failed. Is Flask running?", error);
+        setBrandData(null);
+        setActiveView('default');
       }
     };
+
+    // 2. THE MAGIC: Check if we are a real Chrome extension!
+   /* if (typeof chrome !== 'undefined' && chrome.tabs) {
+      // We are in Chrome! Grab the active tab URL.
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const liveUrl = tabs[0].url;
+        sendUrlToFlask(liveUrl); 
+      });
+    } else {
+      // We are just testing on localhost. Use the fake URL so we don't crash.
+      console.log("Not in Chrome extension mode. Using test URL.");
+      sendUrlToFlask("https://www.shein.com");
+    }
+    */
+  };
 
   useEffect(() => {
     // This function talks to the backend
