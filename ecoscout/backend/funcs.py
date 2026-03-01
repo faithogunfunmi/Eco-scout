@@ -1,28 +1,12 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
+from urllib.parse import urlparse, parse_qs
 
-cred = credentials.Certificate(r"C:\Users\espyc\Documents\GitHub\Eco-scout\ecoscout\backend\credentials.json")
+cred = credentials.Certificate("credentials.json")
 firebase_admin.initialize_app(cred)
 
-#app = firebase_admin.initialize_app()
 db = firestore.client()
 
-from urllib.parse import urlparse, parse_qs
-#Get the documents
-docs = db.collection("FastFashionData").stream()
-
-for doc in docs:
-    print(f"{doc.id} => {doc.to_dict()}")
-
-
-
-
-# Getting brand name from URL
-
-#Example URL
-url = "https://www2.hm.com/en_us/index.html"
-
-# Identifies the brand from url
 def get_brand_from_url(url):
     parsed_url = urlparse(url)
     hostname = parsed_url.hostname
@@ -42,9 +26,6 @@ def get_brand_from_url(url):
     
     return brand.lower()
 
-# Brand
-brand = get_brand_from_url(url)
-print(f"URL Brand: {brand}")
 
 # If brand name matches firebase company names
 def match_brand_to_company(brand):
@@ -63,15 +44,23 @@ def get_company_from_doc(doc_id):
         return doc.to_dict().get("Company")
     return None
 
+def get_sustain_rating(document_id):
+    doc = db.collection("FastFashionData").document(document_id).get()
+    return doc.to_dict().get("Sustain")
+    
+def get_ethic_rating(document_id):
+    doc = db.collection("FastFashionData").document(document_id).get()
+    return doc.to_dict().get("Ethic")
 
-brand = get_brand_from_url(url)
-print(f"Extracted brand: {brand}")
 
-# CALL THE FUNCTION HERE:
-match = match_brand_to_company(brand)
-company = get_company_from_doc(match)
+def get_total_rating(document_id):
+    doc = db.collection("FastFashionData").document(document_id).get()
+    sustainRate = doc.to_dict().get("Sustain")
+    ethicRate = doc.to_dict().get("Ethic")
 
-if match:
-    print(f"Success! Found: {company}")
-else:
-    print("No match found in database.")
+    if sustainRate == 0 and ethicRate == 0:
+        return 0
+    elif sustainRate == 1 or ethicRate == 1:
+        return 1
+    else:
+        return 2
