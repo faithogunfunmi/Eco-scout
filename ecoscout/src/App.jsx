@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Leaf, Search } from 'lucide-react';
 import { MOCK_CASES, DEFAULT_RECOMMENDATIONS} from './brandData';
 import './App.css';
@@ -14,6 +14,34 @@ function App() {
   const [activeView, setActiveView] = useState('default');
   // Grab the data for the selected brand (will be null if 'default' is active)
   const brandData = activeView !== 'default' ? MOCK_CASES[activeView] : null;
+
+  const testBackendConnection = async () => {
+      // Step 1a: The hard-coded URL
+      const fakeUrl = "https://www.shein.com"; 
+
+      try {
+        // Step 1b: Send the URL to Flask
+        const response = await fetch("http://127.0.0.1:8080", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ url: fakeUrl }) // Packaging it up!
+        }); 
+        
+        // Let's print the response so you can prove it worked!
+        const data = await response.json();
+        console.log("Response from backend:", data);
+
+      } catch (error) {
+        console.error("Fetch failed. Is Flask running?", error);
+      }
+    };
+
+  useEffect(() => {
+    // This function talks to the backend
+    testBackendConnection();
+  }, []); 
 
   return (
 
@@ -93,6 +121,12 @@ function App() {
       {/* --- HACKATHON TEST BUTTONS (We will delete these later) --- */}
       <div className="test-panel">
         <p>Test Views:</p>
+        <button 
+          onClick={testBackendConnection} 
+          style={{ background: '#4A5D23', color: 'white', padding: '8px', width: '100%', marginBottom: '10px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+        >
+          STEP 1: Send URL to Backend
+        </button>
         <div className="test-buttons">
           <button onClick={() => setActiveView('default')} className={activeView === 'default' ? 'active' : ''}>Default</button>
           <button onClick={() => setActiveView('yes')} className={activeView === 'yes' ? 'active' : ''}>Yes</button>
@@ -103,36 +137,7 @@ function App() {
     </div>
   );
 
-  useEffect(() => {
-    // This function talks to the backend
-    const testBackendConnection = async () => {
-      // Step 1a: The hard-coded URL
-      const fakeUrl = "https://www.shein.com"; 
-
-      try {
-        // Step 1b: Send the URL to Flask
-        const response = await fetch("http://127.0.0.1:8080/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url: fakeUrl }) // Packaging it up!
-        });
-        
-        // Let's print the response so you can prove it worked!
-        const data = await response.json();
-        console.log("Response from backend:", data);
-
-      } catch (error) {
-        console.error("Fetch failed. Is Flask running?", error);
-      }
-    };
-
-    // THIS IS THE PART YOU WERE MISSING: 
-    // You have to actually tell the function to run!
-    testBackendConnection();
-    
-  }, []); 
+  
 }
 
 export default App;
