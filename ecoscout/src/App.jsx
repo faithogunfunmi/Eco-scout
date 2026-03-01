@@ -102,6 +102,37 @@ function App() {
       </div>
     </div>
   );
+
+  useEffect(() => {
+    // This function talks to the backend
+    const testBackendConnection = async () => {
+      // Step 1a: The hard-coded URL
+      const fakeUrl = "https://www.shein.com"; 
+
+      try {
+        // Step 1b: Send the URL to Flask
+        const response = await fetch("http://127.0.0.1:8080/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url: fakeUrl }) // Packaging it up!
+        });
+        
+        // Let's print the response so you can prove it worked!
+        const data = await response.json();
+        console.log("Response from backend:", data);
+
+      } catch (error) {
+        console.error("Fetch failed. Is Flask running?", error);
+      }
+    };
+
+    // THIS IS THE PART YOU WERE MISSING: 
+    // You have to actually tell the function to run!
+    testBackendConnection();
+    
+  }, []); 
 }
 
 export default App;
