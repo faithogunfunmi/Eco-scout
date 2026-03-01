@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS, cross_origin
 import funcs
 
+
 app = Flask(__name__, static_folder="../../frontend/crud_app/dist", static_url_path="/")
 CORS(app,
      resources={r"/*": {"origins": "chrome-extension://dcmfcppjhgfgachphnifcijnnjihgjkb"}},
@@ -24,14 +25,25 @@ def get_data():
 
     brand = funcs.get_brand_from_url(url)
     docId = funcs.match_brand_to_company(brand)
-    company = funcs.get_company_from_doc(docId)
+    company = funcs.get_name_from_doc(docId)
+
+    reccomendations = funcs.get_rec_names(docId)
+    reccomendURL = funcs.get_rec_urls(docId)
+
+     # can fix this later such that it reccomends the best 3 sustainable brands
+    if(reccomendations == None or len(reccomendations) == 0):
+        reccomendations = ["No recommendations found"]
+    if(reccomendURL == None or len(reccomendURL) == 0):
+        reccomendURL = ["google.com"]
+
 
     return jsonify({
         "name": company,
         "sustainability": funcs.get_sustain_rating(docId),
         "ethics": funcs.get_ethic_rating(docId),
         "overall": funcs.get_total_rating(docId),
-        "recommendations": ["hello"] # THIS CAN NEVER BE EMPTY OR THERE WILL BE AN ERROR
+        "recommendations": reccomendations, # THIS CAN NEVER BE EMPTY OR THERE WILL BE AN ERROR
+        "recommendURL": reccomendURL # THIS CAN NEVER BE EMPTY OR THERE WILL BE AN ERROR
         }), 200
 
 if __name__ == "__main__":

@@ -44,6 +44,12 @@ def get_company_from_doc(doc_id):
         return doc.to_dict().get("Company")
     return None
 
+def get_name_from_doc(doc_id):
+    doc = db.collection("FastFashionData").document(doc_id).get()
+    if doc.exists:
+        return doc.to_dict().get("Name")
+    return None
+
 def get_sustain_rating(document_id):
     doc = db.collection("FastFashionData").document(document_id).get()
     return doc.to_dict().get("Sustain")
@@ -64,3 +70,49 @@ def get_total_rating(document_id):
         return 1
     else:
         return 2
+    
+
+def get_rec_names(document_id):
+    my_strings = []
+    doc = db.collection("FastFashionData").document(document_id).get()
+    if doc.exists:
+        data = doc.to_dict()
+        rec_refs = data.get("Recs", [])
+
+        for recID in rec_refs:
+            recDoc= db.collection("Recs").document(recID).get()
+            rec=recDoc.get()
+            if rec.exists:
+                rec_data = rec.to_dict()
+                company_name = rec_data.get("Company")
+                if company_name:
+                    my_strings.append(company_name)
+            else:
+                print(f"Document {recID} not found!")
+    else:
+        print(f"Document {document_id} not found!")
+
+
+def get_rec_names(document_id):
+    my_strings = []
+    doc = db.collection("FastFashionData").document(document_id).get()
+    if doc.exists:
+        data = doc.to_dict()
+        rec_refs = data.get("Recc", [])
+
+        for recID in rec_refs:
+            rec=recID.get()
+            if rec.exists:
+                rec_data = rec.to_dict()
+                url = rec_data.get("URL")
+                print(url)
+                if url:
+                    my_strings.append(url)
+            else:
+                print(f"Document {recID} not found!")
+    else:
+        print(f"Document {document_id} not found!")
+
+
+
+    return my_strings
