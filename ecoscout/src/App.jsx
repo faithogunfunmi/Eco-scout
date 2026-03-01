@@ -15,6 +15,7 @@ function App() {
   const [activeView, setActiveView] = useState('default'); 
   const [brandData, setBrandData] = useState(null);
 
+
   const testBackendConnection = async () => {
       // Step 1a: The hard-coded URL
       console.log("checkpoint1");
@@ -44,6 +45,9 @@ function App() {
         if (data && data.overall !== undefined) {
           let viewToTarget = 'default'
           console.log("checkpoint3");
+
+          //createNotification(`This brand has an overall rating of ${translateRating(data.overall)}. Click our extension to learn more!`);
+
           if (data.overall === 0) {
             setActiveView('yes');
             viewToTarget = 'yes';
@@ -93,7 +97,22 @@ function App() {
       console.log("Not in Chrome extension mode. Using test URL.");
       sendUrlToFlask("https://www.shein.com");
     }
+
     
+    
+  };
+
+  const createNotification = (message) => {
+    console.log("CreateNotification called");
+    if (typeof chrome !== 'undefined' && chrome.notifications) {
+          console.log("Creating notification with message:", message);
+          chrome.notifications.create({
+            title : "EcoScout Alert",
+            message : message,
+            iconUrl : "leaf4.png",
+            type : 'basic'
+          })
+    }
   };
 
   useEffect(() => {

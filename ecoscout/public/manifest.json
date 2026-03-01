@@ -13,7 +13,8 @@
   },
   "permissions": [
     "activeTab",
-    "tabs"
+    "tabs",
+    "notifications"
   ],
   "icons": {
     "16": "leaf4.png",
