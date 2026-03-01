@@ -3,6 +3,7 @@ import { Leaf, Search } from 'lucide-react';
 import { MOCK_CASES, DEFAULT_RECOMMENDATIONS} from './brandData';
 import './App.css';
 
+// This function translates the numeric values we set for our ratings into human-readable text for the UI.
 const translateRating = (number) => {
   if (number === 0) return "Good";
   if (number === 1) return "Bad";
@@ -15,20 +16,21 @@ function App() {
   const [activeView, setActiveView] = useState('default'); 
   const [brandData, setBrandData] = useState(null);
 
-
+  // This function is responsible for communicating with the Flask backend. 
+  /* It sends back a given URL, then based on what's returned it:
+        - Sets the active view (What screen the user will see)
+        - Sets the brand data (The information about the brand that will be shown on the screen)
+  */
   const testBackendConnection = async () => {
-      // Step 1a: The hard-coded URL
+      
       console.log("checkpoint1");
-
-      //const fakeUrl = "https://www.shein.com"; 
-      //sendUrlToFlask(fakeUrl);
-
+      
       const sendUrlToFlask = async (liveUrl) => {
 
       console.log("checkpoint2");
 
       try {
-        // Step 1b: Send the URL to Flask
+        // Sends the URL to Flask
         console.log(`Sending this URL to Flask: ${liveUrl}`);
         const response = await fetch("http://127.0.0.1:8080", {
           method: "POST",
@@ -38,7 +40,6 @@ function App() {
           body: JSON.stringify({ url: liveUrl })
         }); 
         
-        // Let's print the response so you can prove it worked!
         const data = await response.json();
         console.log("Response from backend:", data);
 
@@ -46,8 +47,10 @@ function App() {
           let viewToTarget = 'default'
           console.log("checkpoint3");
 
+          // Potential Advancement: We were working on adding notifications to alert users when they visit a site with a brand in our database.
           //createNotification(`This brand has an overall rating of ${translateRating(data.overall)}. Click our extension to learn more!`);
 
+          // Sets the active view based on the overall rating
           if (data.overall === 0) {
             setActiveView('yes');
             viewToTarget = 'yes';
@@ -66,6 +69,7 @@ function App() {
             console.log("checkpoint4d");
           }
         
+        // Sets the brand data that will be shown on the screen
         setBrandData({
           ...data,
           overall: viewToTarget 
@@ -84,16 +88,16 @@ function App() {
       }
     };
 
-    // 2. THE MAGIC: Check if we are a real Chrome extension!
+    // Checks if we're in a Chrome extension
    if (typeof chrome !== 'undefined' && chrome.tabs) {
-      // We are in Chrome! Grab the active tab URL.
+      // If we are, we grab the active URL
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const liveUrl = tabs[0].url;
         console.log("Live URL from Chrome:", liveUrl);
         sendUrlToFlask(liveUrl); 
       });
     } else {
-      // We are just testing on localhost. Use the fake URL so we don't crash.
+      // If we are just testing on localhost, we use the fake URL so we don't crash.
       console.log("Not in Chrome extension mode. Using test URL.");
       sendUrlToFlask("https://www.shein.com");
     }
@@ -102,6 +106,8 @@ function App() {
     
   };
 
+  // Future advancement: Adding notifications
+  // Not used in our current version, but saved for future development
   const createNotification = (message) => {
     console.log("CreateNotification called");
     if (typeof chrome !== 'undefined' && chrome.notifications) {
@@ -115,6 +121,7 @@ function App() {
     }
   };
 
+  // Runs the testBackendConnection when the extension is opened
   useEffect(() => {
     // This function talks to the backend
     console.log("start");
@@ -122,8 +129,6 @@ function App() {
   }, []); 
 
   return (
-
-
     <div className="app-container">
       {/* HEADER */}
 
@@ -182,7 +187,7 @@ function App() {
             </div>
           </div>
 
-          {/* Recommendations Box (Only show if there are recommendations) */}
+          {/* Recommendations Box */}
           *{brandData.recommendations?.length > 0 && (
         <div className="rec-box">
           <h3>Recommendations</h3>

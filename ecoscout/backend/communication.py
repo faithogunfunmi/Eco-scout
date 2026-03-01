@@ -1,3 +1,5 @@
+# communication.py ties the frontend and backend together using Flask
+
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS, cross_origin
 import funcs
@@ -10,11 +12,12 @@ CORS(app,
      methods=["GET", "POST", "OPTIONS"],
      supports_credentials=True)
 
-
+# Test!
 @app.route("/", methods=["GET"])
 def test():
     return jsonify({"message": "Backend is running!"})
 
+# Grabs the URL sent by the frontend, get the data from FireStore, and sends the data back as a JSON object
 @app.route("/", methods=["POST"])
 def get_data():
     print("Received POST request with data:", request.json.get("url"))
@@ -25,20 +28,17 @@ def get_data():
 
     brand = funcs.get_brand_from_url(url)
     docId = funcs.match_brand_to_company(brand)
-    company = funcs.get_name_from_doc(docId)
 
     reccomendations = funcs.get_rec_names(docId)
     reccomendURL = funcs.get_rec_urls(docId)
 
-     # can fix this later such that it reccomends the best 3 sustainable brands
     if(reccomendations == None or len(reccomendations) == 0):
         reccomendations = ["No recommendations found"]
     if(reccomendURL == None or len(reccomendURL) == 0):
         reccomendURL = ["google.com"]
 
-
     return jsonify({
-        "name": company,
+        "name": funcs.get_name_from_doc(docId),
         "sustainability": funcs.get_sustain_rating(docId),
         "ethics": funcs.get_ethic_rating(docId),
         "overall": funcs.get_total_rating(docId),

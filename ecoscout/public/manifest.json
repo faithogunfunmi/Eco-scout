@@ -3,6 +3,7 @@
   "name": "EcoScout",
   "version": "1.0",
   "description": " ",
+
   "action": {
     "default_popup": "index.html",
     "default_title": "EcoScout",
@@ -11,6 +12,12 @@
       "48": "leaf4.png"
     }
   },
+
+  "background": {
+    "service_worker": "background.js"
+   
+  },
+
   "permissions": [
     "activeTab",
     "tabs",
