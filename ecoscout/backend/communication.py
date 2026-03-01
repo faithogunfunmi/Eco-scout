@@ -1,17 +1,25 @@
 from flask import Flask, jsonify, request, send_from_directory
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import funcs
 
 app = Flask(__name__, static_folder="../../frontend/crud_app/dist", static_url_path="/")
-CORS(app)
+CORS(app,
+     resources={r"/*": {"origins": "http://localhost:5173"}},
+     allow_headers=["Content-Type", "Authorization"],
+     methods=["GET", "POST", "OPTIONS"],
+     supports_credentials=True)
 
 # Testing URL
 testUrl = "https://www2.hm.com/en_us/index.html"
 
+@app.route("/", methods=["GET"])
+def test():
+    return jsonify({"message": "Backend is running!"})
+
 @app.route("/", methods=["POST"])
 def get_data():
-    data = request.json.get()
-    url = data.get("url")
+    print("Received POST request with data:", request.json.get("url"))
+    url = request.json.get("url")
 
     if not url:
         return jsonify({"error": "URL not found"}), 400
@@ -29,4 +37,4 @@ def get_data():
         }), 200
 
 if __name__ == "__main__":
-    app.run(port=8080,debug=True)
+    app.run(port=8080,debug=True,host="0.0.0.0")
