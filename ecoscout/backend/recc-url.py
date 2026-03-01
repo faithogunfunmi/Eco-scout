@@ -13,8 +13,11 @@ from urllib.parse import urlparse, parse_qs
 doc_id = "0pvbEsazeeKdOAya259c"
 docs = db.collection("FastFashionData").document(doc_id)
 
+recID_arr = []
+
 
 def get_rec_names(docs):
+    counter = 0
     my_strings = []
     doc=docs.get()
     if doc.exists:
@@ -31,11 +34,10 @@ def get_rec_names(docs):
                     my_strings.append(company_name)
             else:
                 print(f"Document IDs: {recID.id}!")
+                my_strings.append(recID.id)
     else:
         print(f"Document {doc_id} not found!")
-    
-    recID_arr = []
-    
+            
 
     for name in my_strings:
         print(name)    
@@ -44,6 +46,17 @@ def get_rec_names(docs):
 
 #Get Recs
 docs_recs = db.collection("Recs").document(doc_id)
+for names in docs:
+    print(f"{names.id} => {names.to_dict()}")
+
+for names in docs:
+        data = names.to_dict()
+        urls = data.get("URL", "").lower()
+        if names in urls:
+            print("Matched brand:", names, "to URL:", urls)
+            #return names.id # Return the document ID
+    #return None
+
 # if my_strings in company_name:
 #             print("Matched brand:", brand, "to Company:", company_name)
 #             return doc.id # Return the document ID
