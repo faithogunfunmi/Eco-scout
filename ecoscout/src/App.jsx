@@ -16,38 +16,46 @@ function App() {
 
   const testBackendConnection = async () => {
       // Step 1a: The hard-coded URL
-      //const fakeUrl = "https://www.shein.com"; 
+      console.log("checkpoint1");
 
-      const sendUrlToFlask = async (urlToSend) => {
+      const fakeUrl = "https://www.shein.com"; 
+      //sendUrlToFlask(fakeUrl);
+
+      //const sendUrlToFlask = async (fakeUrl) => {
+
+      console.log("checkpoint2");
 
       try {
         // Step 1b: Send the URL to Flask
-        console.log(`Sending this URL to Flask: ${urlToSend}`);
+        console.log(`Sending this URL to Flask: ${fakeUrl}`);
         const response = await fetch("http://127.0.0.1:8080", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ url: urlToSend })
+          body: JSON.stringify({ url: fakeUrl })
         }); 
         
         // Let's print the response so you can prove it worked!
         const data = await response.json();
         console.log("Response from backend:", data);
-
+        
         if (data && data.overall !== undefined) {
-
-          let viewToTarget = 'default';
-
+          console.log("checkpoint3");
           if (data.overall === 0) {
-          viewToTarget = 'yes';
-        } else if (data.overall === 1) {
-          viewToTarget = 'no';
-        } else if (data.overall === 2) {
-          viewToTarget = 'mixed';
-        }
-
-        setActiveView(viewToTarget);
+            setActiveView('Yes');
+            console.log("checkpoint4a");
+          } else if (data.overall === 1) {
+            setActiveView('No');
+            console.log("checkpoint4b");
+          } else if (data.overall === 2) {
+            setActiveView('Mixed');
+            console.log("checkpoint4c");
+          }
+          else{
+            setActiveView('default');
+            console.log("checkpoint4d");
+          }
         /*
         setBrandData({
           ...data,
@@ -65,7 +73,7 @@ function App() {
         setBrandData(null);
         setActiveView('default');
       }
-    };
+    //};
 
     // 2. THE MAGIC: Check if we are a real Chrome extension!
    /* if (typeof chrome !== 'undefined' && chrome.tabs) {
@@ -84,6 +92,7 @@ function App() {
 
   useEffect(() => {
     // This function talks to the backend
+    console.log("start");
     testBackendConnection();
   }, []); 
 

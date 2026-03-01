@@ -9,8 +9,6 @@ CORS(app,
      methods=["GET", "POST", "OPTIONS"],
      supports_credentials=True)
 
-# Testing URL
-testUrl = "https://www2.hm.com/en_us/index.html"
 
 @app.route("/", methods=["GET"])
 def test():
