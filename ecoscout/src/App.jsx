@@ -4,11 +4,12 @@ import { MOCK_CASES, DEFAULT_RECOMMENDATIONS} from './brandData';
 import './App.css';
 
 const translateRating = (number) => {
-  if (number === 0) return "Yes";
-  if (number === 1) return "No";
+  if (number === 0) return "Good";
+  if (number === 1) return "Bad";
   if (number === 2) return "Mixed";
   return "Unknown";
 };
+
 
 function App() {
   const [activeView, setActiveView] = useState('default'); 
@@ -156,9 +157,9 @@ function App() {
               <div className={`meter-needle point-${brandData.overall}`}></div>
             </div>
             <div className="meter-labels">
-              <span>Yes</span>
+              <span>Good</span>
               <span>Mixed</span>
-              <span>No</span>
+              <span>Bad</span>
             </div>
           </div>
 
